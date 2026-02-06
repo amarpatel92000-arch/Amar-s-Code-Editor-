@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+  
+</body>
+
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Amar's Code Editor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:monospace;
+}
+
+/* SPLASH */
+#splash{
+  position:fixed;
+  inset:0;
+  background:#020617;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:10;
+  text-align:center;
+}
+
+#splash h1{
+  color:#C3C8FF;
+  font-size:2rem;
+  animation:fadeZoom 2.5s ease forwards;
+  box-shadow: 0px 0px 10px 20px #9092A3;
+}
+
+@keyframes fadeZoom{
+  0%{opacity:0;transform:scale(0.6)}
+  50%{opacity:1;transform:scale(1.1)}
+  100%{opacity:0;transform:scale(1.4)}
+}
+
+/* EDITOR FULL SCREEN */
+#editorScreen{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#020617;
+  color:#e5e7eb;
+}
+
+header{
+  padding:12px;
+  text-align:center;
+  border-bottom:1px solid #1e293b;
+  font-weight:bold;
+}
+
+/* FILE TABS */
+.tabs{
+  display:flex;
+  border-bottom:1px solid #1e293b;
+}
+
+.tabs button{
+  flex:1;
+  background:none;
+  border:none;
+  color:#94a3b8;
+  padding:10px;
+  cursor:pointer;
+}
+
+.tabs button.active{
+  color:#38bdf8;
+  border-bottom:2px solid #38bdf8;
+}
+
+/* TEXTAREA FULL */
+textarea{
+  width:100%;
+  height:calc(100vh - 140px);
+  background:#3C9FA4;
+  color:#343649;
+  border:none;
+  padding:12px;
+  font-size:14px;
+  outline:none;
+}
+
+/* RUN BUTTON */
+.runBtn{
+  width:100%;
+  padding:12px;
+  background:#FFFFFF;
+  color:#020617;
+  border:none;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* OUTPUT FULL SCREEN */
+#outputScreen{
+  position:fixed;
+  inset:0;
+  background:white;
+  display:none;
+  z-index:20;
+}
+
+#outputScreen iframe{
+  width:100%;
+  height:100%;
+  border:none;
+}
+
+#backBtn{
+  position:fixed;
+  top:10px;
+  right:10px;
+  z-index:30;
+  background:#020617;
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <h1>Amar's Code Editor</h1>
+</div>
+
+<!-- FULL SCREEN EDITOR -->
+<div id="editorScreen">
+  <header>Amar's Code Editor</header>
+  <hr color="red">
+
+  <div class="tabs">
+    <button class="active" onclick="openTab('html',this)">index.html</button>
+    <button onclick="openTab('css',this)">style.css</button>
+    <button onclick="openTab('js',this)">script.js</button>
+  </div>
+
+  <textarea id="html">
+<h1>Hello Amar 🚀</h1>
+<p>Full screen code editor</p>
+  </textarea>
+
+  <textarea id="css" style="display:none">
+body{
+  background:#f8fafc;
+  font-family:sans-serif;
+}
+h1{color:#0ea5e9;}
+  </textarea>
+
+  <textarea id="js" style="display:none">
+console.log("Editor Running");
+  </textarea>
+
+  <button class="runBtn" onclick="runCode()">▶ Run Code</button>
+</div>
+
+<!-- FULL SCREEN OUTPUT -->
+<div id="outputScreen">
+  <button id="backBtn" onclick="backToEditor()">❌</button>
+  <iframe id="result"></iframe>
+</div>
+
+<script>
+/* SPLASH */
+setTimeout(()=>{
+  document.getElementById("splash").style.display="none";
+  document.getElementById("editorScreen").style.display="block";
+},2500);
+
+/* TAB SWITCH */
+function openTab(tab,btn){
+  document.querySelectorAll("textarea").forEach(t=>t.style.display="none");
+  document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
+
+  document.getElementById(tab).style.display="block";
+  btn.classList.add("active");
+}
+
+/* RUN CODE → OUTPUT FULL SCREEN */
+function runCode(){
+  const html=document.getElementById("html").value;
+  const css=document.getElementById("css").value;
+  const js=document.getElementById("js").value;
+
+  document.getElementById("editorScreen").style.display="none";
+  document.getElementById("outputScreen").style.display="block";
+
+  const doc=document.getElementById("result").contentWindow.document;
+  doc.open();
+  doc.write(`
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style>${css}</style>
+</head>
+<body>
+${html}
+<script>${js}<\/script>
+</body>
+</html>
+  `);
+  doc.close();
+}
+
+/* BACK TO EDITOR */
+function backToEditor(){
+  document.getElementById("outputScreen").style.display="none";
+  document.getElementById("editorScreen").style.display="block";
+}
+</script>
+
+</body>
+</html>
